@@ -1,0 +1,30 @@
+{
+  "name": "genshin-impact-auto-track",
+  "version": "0.0.1",
+  "description": "Node.js N-API binding of GenshinImpact AutoTrack DLL.",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "os": [
+    "win32"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "scripts": {
+    "preinstall": "pwsh download-dll.ps1",
+    "install": "npm run rebuild",
+    "test": "node ./test",
+    "build": "node-gyp build",
+    "rebuild": "node-gyp rebuild"
+  },
+  "keywords": [
+    "genshin",
+    "impact"
+  ],
+  "author": "pboymt",
+  "license": "MIT",
+  "dependencies": {
+    "node-addon-api": "*"
+  },
+  "gypfile": true
+}

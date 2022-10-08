@@ -1,0 +1,63 @@
+{
+    'targets': [
+        {
+            'target_name': 'genshin-impact-auto-track',
+            'sources': ['src/main.cc'],
+            'include_dirs': [
+                "<!@(node -p \"require('node-addon-api').include\")",
+                "../cvAutoTrack"
+            ],
+            'dependencies': ["<!(node -p \"require('node-addon-api').gyp\")"],
+            'cflags!': ['-fno-exceptions'],
+            'cflags_cc!': ['-fno-exceptions'],
+            'xcode_settings': {
+                'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
+                'CLANG_CXX_LIBRARY': 'libc++',
+                'MACOSX_DEPLOYMENT_TARGET': '10.7'
+            },
+            'msvs_settings': {
+                'VCCLCompilerTool': {'ExceptionHandling': 1},
+            },
+            "conditions": [
+                ["OS==\"win\"", {
+                    "libraries": ["<(module_root_dir)/cvAutoTrack/CVAUTOTRACK.lib"],
+                    "copies": [
+                        {
+                            "destination": "<(module_root_dir)/build/Release/",
+                            "files": ["<(module_root_dir)/cvAutoTrack/CVAUTOTRACK.dll"]
+                        }
+                    ]
+                }]
+            ]
+        },
+        # {
+        #     "target_name": "merge_binaries",
+        #     "type": 'none',
+        #     # test is built before this target is built
+        #     "dependencies": ['genshin-impact-auto-track'],
+        #     "copies":[
+        #             {
+        #                 "destination": "<(module_root_dir)/build/release/<(arch)",
+        #                 "files": [
+        #                     "../<(arch)/release/CVAUTOTRACK.dll.dll"
+        #                 ]
+        #             }
+        #     ]
+        # },
+        # {
+        #     "target_name": "copy_binaries",
+        #     "type": 'none',
+        #     # target merge_binaries is built before this target is built
+        #     "dependencies": ['merge_binaries'],
+        #     "copies":[
+        #             {
+        #                 "destination": "<(module_root_dir)/../../../../ExpressApp",
+        #                 "files": [
+        #                     "<(module_root_dir)/build/release/<(arch)/Extention.dll.dll",
+        #                     "<(module_root_dir)/build/release/test.node"
+        #                 ]
+        #             }
+        #     ]
+        # }
+    ]
+}
