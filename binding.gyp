@@ -23,7 +23,7 @@
                     "libraries": ["<(module_root_dir)/cvAutoTrack/CVAUTOTRACK.lib"],
                     "copies": [
                         {
-                            "destination": "<(module_root_dir)/build/Release/",
+                            "destination": "<(PRODUCT_DIR)/",
                             "files": ["<(module_root_dir)/cvAutoTrack/CVAUTOTRACK.dll"]
                         }
                     ]
