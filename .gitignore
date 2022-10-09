@@ -131,5 +131,6 @@ dist
 
 # Custom
 /cvAutoTrack
-/build
+/build*
 /.vscode
+/lib/binding

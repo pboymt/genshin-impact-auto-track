@@ -30,6 +30,21 @@
                 }]
             ]
         },
+        {
+            "target_name": "action_after_build",
+            "type": "none",
+            "dependencies": ["<(module_name)"],
+            "copies": [
+                {
+                    "files": ["<(PRODUCT_DIR)/<(module_name).node"],
+                    "destination": "<(module_path)"
+                },
+                {
+                    "files": ["<(PRODUCT_DIR)/CVAUTOTRACK.dll"],
+                    "destination": "<(module_path)"
+                }
+            ]
+        }
         # {
         #     "target_name": "merge_binaries",
         #     "type": 'none',
