@@ -17,9 +17,102 @@
 <ul class="tsd-signatures tsd-kind-function">
 <li class="tsd-signature tsd-anchor-link" id="getLastErr">get<wbr/>Last<wbr/>Err<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><a href="#getLastErr" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></li>
 <li class="tsd-description">
+<div class="tsd-comment tsd-typography"><p>获取最后设置的错误码。</p>
+
+<a href="#返回值" id="返回值" style="color: inherit; text-decoration: none;">
+  <h3>返回值</h3>
+</a>
+<p>返回一个整数，表示错误码。错误码含义如下：</p>
+<table>
+<thead>
+<tr>
+<th>错误码</th>
+<th>含义</th>
+<th>可能的原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>0</code></td>
+<td>执行成功/正常退出。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>1</code></td>
+<td>未初始化（当前处在 <strong>未初始化</strong> 状态）。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>未能找到原神窗口句柄。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>3</code></td>
+<td>窗口画面为空。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>4</code></td>
+<td>未能匹配到特征点。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>5</code></td>
+<td>原神小地图区域为空或者区域长宽小于60px。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>6</code></td>
+<td>未能匹配到派蒙。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>7</code></td>
+<td>特征点数组访问越界，是个bug。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>8</code></td>
+<td>未能在UID区域检测到有效UID。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>9</code></td>
+<td>提取小箭头特征误差过大。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>10</code></td>
+<td>无效句柄或指定句柄所指向窗口不存在。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>11</code></td>
+<td>未能取到小箭头区域。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>12</code></td>
+<td>窗口句柄失效。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>13</code></td>
+<td>窗口大小小于480px * 360px。</td>
+<td></td>
+</tr>
+</tbody></table>
+
+<a href="#说明" id="说明" style="color: inherit; text-decoration: none;">
+  <h3>说明</h3>
+</a>
+<p>由于函数成功执行后可能不会将错误码设为 <code>0</code> ，以及一些函数不会设置错误码，因此取出的错误码不一定代表前一条函数产生/引发的错误。</p>
+
+<h3>Returns</h3><p>获取到的错误码。</p>
+</div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/pboymt/genshin-impact-auto-track/blob/86ac1ab/lib/index.d.ts#L183">index.d.ts:183</a></li></ul></aside></li></ul></section></div>
+<li>Defined in <a href="https://github.com/pboymt/genshin-impact-auto-track/blob/1825601/lib/index.d.ts#L303">index.d.ts:303</a></li></ul></aside></li></ul></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
