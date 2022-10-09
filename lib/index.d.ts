@@ -151,7 +151,7 @@ declare module 'genshin-impact-auto-track' {
      *
      * ### 说明
      * 
-     * **注意**：暂未对错误进行处理，如果获取失败，可能会报错。
+     * **注意**：当源程序返回 `false` 时，模块会抛出错误，部分错误可能只是源项目未实现，并非本模块执行错误。
      * 
      * @returns {TransformOfMap} 获取到的人物的所在地图区域。
      */
@@ -177,7 +177,7 @@ declare module 'genshin-impact-auto-track' {
      * | `1`      | 渊下宫                   |
      * | `2`      | 地下层岩                 |
      * 
-     * **注意**：暂未对错误进行处理，如果获取失败，可能会报错。
+     * **注意**：当源程序返回 `false` 时，模块会抛出错误，部分错误可能只是源项目未实现，并非本模块执行错误。
      * 
      * @returns {TransformOfMap} 获取到的人物的所在地图区域。
      */
@@ -190,7 +190,7 @@ declare module 'genshin-impact-auto-track' {
      * 
      * ### 说明
      * 
-     * **注意**：暂未对错误进行处理，如果获取失败，可能会报错。
+     * **注意**：当源程序返回 `false` 时，模块会抛出错误，部分错误可能只是源项目未实现，并非本模块执行错误。
      */
     export function getDirection(): number;
 
@@ -199,7 +199,7 @@ declare module 'genshin-impact-auto-track' {
      * 
      * ### 说明
      * 
-     * **注意**：暂未对错误进行处理，如果获取失败，可能会报错。
+     * **注意**：当源程序返回 `false` 时，模块会抛出错误，部分错误可能只是源项目未实现，并非本模块执行错误。
      * 
      * @returns {number} 获取到的人物的视角方位（视角朝向）。
      */
@@ -213,7 +213,7 @@ declare module 'genshin-impact-auto-track' {
      * 
      * ### 说明
      * 
-     * **注意**：暂未对错误进行处理，如果获取失败，可能会报错。
+     * **注意**：当源程序返回 `false` 时，模块会抛出错误，部分错误可能只是源项目未实现，并非本模块执行错误。
      * 
      * @returns {number} 获取到的玩家的UID。
      */
@@ -236,7 +236,7 @@ declare module 'genshin-impact-auto-track' {
      * 
      * ### 说明
      * 
-     * **注意**：暂未对错误进行处理，如果获取失败，可能会报错。
+     * **注意**：当源程序返回 `false` 时，模块会抛出错误，部分错误可能只是源项目未实现，并非本模块执行错误。
      * 
      * @param path 输入图片文件路径
      */
@@ -262,7 +262,7 @@ declare module 'genshin-impact-auto-track' {
      * | int Time | int uid | double x | double y | double a | 
      * ```
      * 
-     * **注意**：暂未对错误进行处理，如果获取失败，可能会报错。
+     * **注意**：当源程序返回 `false` 时，模块会抛出错误，部分错误可能只是源项目未实现，并非本模块执行错误。
      * 
      * @param path 
      * @param pathOutFile 

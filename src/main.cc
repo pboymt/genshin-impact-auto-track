@@ -3,7 +3,7 @@
 
 using namespace Napi;
 
-Napi::String TVersion(const CallbackInfo &info)
+Napi::Value TVersion(const CallbackInfo &info)
 {
     Env env = info.Env();
     char version_buff[1024] = {0};
@@ -11,169 +11,293 @@ Napi::String TVersion(const CallbackInfo &info)
     return String::New(env, version_buff);
 }
 
-Napi::Boolean TInit(const CallbackInfo &info)
+Napi::Value TInit(const CallbackInfo &info)
 {
     Env env = info.Env();
     bool result = init();
     return Boolean::New(env, result);
 }
 
-Napi::Boolean TUninit(const CallbackInfo &info)
+Napi::Value TUninit(const CallbackInfo &info)
 {
     Env env = info.Env();
     bool result = uninit();
     return Boolean::New(env, result);
 }
 
-Napi::Boolean TStartServe(const CallbackInfo &info)
+Napi::Value TStartServe(const CallbackInfo &info)
 {
     Env env = info.Env();
     bool result = startServe();
-    return Boolean::New(env, result);
+    if (result)
+    {
+        return Boolean::New(env, result);
+    }
+    else
+    {
+        Napi::Error::New(env, "Run function 'startServe' failed").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
 }
 
-Napi::Boolean TStopServe(const CallbackInfo &info)
+Napi::Value TStopServe(const CallbackInfo &info)
 {
     Env env = info.Env();
     bool result = stopServe();
-    return Boolean::New(env, result);
+    if (result)
+    {
+        return Boolean::New(env, result);
+    }
+    else
+    {
+        Napi::Error::New(env, "Run function 'stopServe' failed").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
 }
 
-Napi::Boolean TSetUseBitbltCaptureMode(const CallbackInfo &info)
+Napi::Value TSetUseBitbltCaptureMode(const CallbackInfo &info)
 {
     Env env = info.Env();
     bool result = SetUseBitbltCaptureMode();
-    return Boolean::New(env, result);
+    if (result)
+    {
+        return Boolean::New(env, true);
+    }
+    else
+    {
+        Napi::Error::New(env, "Run function 'SetUseBitbltCaptureMode' failed.").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
 }
 
-Napi::Boolean TSetUseDx11CaptureMode(const CallbackInfo &info)
+Napi::Value TSetUseDx11CaptureMode(const CallbackInfo &info)
 {
     Env env = info.Env();
     bool result = SetUseDx11CaptureMode();
-    return Boolean::New(env, result);
+    if (result)
+    {
+        return Boolean::New(env, true);
+    }
+    else
+    {
+        Napi::Error::New(env, "Run function 'SetUseDx11CaptureMode' failed.").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
 }
 
-Napi::Boolean TSetHandle(const CallbackInfo &info)
+Napi::Value TSetHandle(const CallbackInfo &info)
 {
     Env env = info.Env();
     long long int handle = info[0].As<Number>().Int64Value();
     bool result = SetHandle(handle);
-    return Boolean::New(env, result);
+    if (result)
+    {
+        return Boolean::New(env, true);
+    }
+    else
+    {
+        Napi::Error::New(env, "Run function 'SetHandle' failed.").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
 }
 
-Napi::Boolean TSetWorldCenter(const CallbackInfo &info)
+Napi::Value TSetWorldCenter(const CallbackInfo &info)
 {
     Env env = info.Env();
     double x = info[0].As<Number>().DoubleValue();
     double y = info[1].As<Number>().DoubleValue();
     bool result = SetWorldCenter(x, y);
-    return Boolean::New(env, result);
+    if (result)
+    {
+        return Boolean::New(env, true);
+    }
+    else
+    {
+        Napi::Error::New(env, "Run function 'SetWorldCenter' failed.").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
 }
 
-Napi::Boolean TSetWorldScale(const CallbackInfo &info)
+Napi::Value TSetWorldScale(const CallbackInfo &info)
 {
     Env env = info.Env();
     double scale = info[0].As<Number>().DoubleValue();
     bool result = SetWorldScale(scale);
-    return Boolean::New(env, result);
+    if (result)
+    {
+        return Boolean::New(env, true);
+    }
+    else
+    {
+        Napi::Error::New(env, "Run function 'SetWorldScale' failed.").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
 }
 
-Napi::Object TGetTransformOfMap(const CallbackInfo &info)
+Napi::Value TGetTransformOfMap(const CallbackInfo &info)
 {
     Env env = info.Env();
-    double x = 0;
-    double y = 0;
-    double a = 0;
-    int mapId = 0;
+    double x = -1;
+    double y = -1;
+    double a = -1;
+    int mapId = -1;
     bool result = GetTransformOfMap(x, y, a, mapId);
-    Object obj = Object::New(env);
-    obj.Set("x", Number::New(env, x));
-    obj.Set("y", Number::New(env, y));
-    obj.Set("a", Number::New(env, a));
-    obj.Set("mapId", Number::New(env, mapId));
-    return obj;
+    if (result)
+    {
+        Object obj = Object::New(env);
+        obj.Set("x", Number::New(env, x));
+        obj.Set("y", Number::New(env, y));
+        obj.Set("a", Number::New(env, a));
+        obj.Set("mapId", Number::New(env, mapId));
+        return obj;
+    }
+    else
+    {
+        Napi::Error::New(env, "Run function 'GetTransformOfMap' failed.").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
 }
 
-Napi::Object TGetPositionOfMap(const CallbackInfo &info)
+Napi::Value TGetPositionOfMap(const CallbackInfo &info)
 {
     Env env = info.Env();
-    double x = 0;
-    double y = 0;
-    int mapId = 0;
+    double x = -1;
+    double y = -1;
+    int mapId = -1;
     bool result = GetPositionOfMap(x, y, mapId);
-    Object obj = Object::New(env);
-    obj.Set("x", Number::New(env, x));
-    obj.Set("y", Number::New(env, y));
-    obj.Set("mapId", Number::New(env, mapId));
-    return obj;
+    if (result)
+    {
+        Object obj = Object::New(env);
+        obj.Set("x", Number::New(env, x));
+        obj.Set("y", Number::New(env, y));
+        obj.Set("mapId", Number::New(env, mapId));
+        return obj;
+    }
+    else
+    {
+        Napi::Error::New(env, "Run function 'GetPositionOfMap' failed.").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
 }
 
-Napi::Number TGetDirection(const CallbackInfo &info)
+Napi::Value TGetDirection(const CallbackInfo &info)
 {
     Env env = info.Env();
-    double a = 0;
+    double a = -1;
     bool result = GetDirection(a);
-    return Number::New(env, a);
+    if (result)
+    {
+        return Number::New(env, a);
+    }
+    else
+    {
+        Napi::Error::New(env, "Run function 'GetDirection' failed.").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
 }
 
-Napi::Number TGetRotation(const CallbackInfo &info)
+Napi::Value TGetRotation(const CallbackInfo &info)
 {
     Env env = info.Env();
-    double a = 0;
+    double a = -1;
     bool result = GetRotation(a);
-    return Number::New(env, a);
+    if (result)
+    {
+        return Number::New(env, a);
+    }
+    else
+    {
+        Napi::Error::New(env, "Run function 'GetRotation' failed.").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
 }
 
-Napi::Object TGetStar(const CallbackInfo &info)
+Napi::Value TGetStar(const CallbackInfo &info)
 {
     Env env = info.Env();
-    double x = 0;
-    double y = 0;
+    double x = -1;
+    double y = -1;
     bool isEnd = false;
     bool result = GetStar(x, y, isEnd);
-    Object obj = Object::New(env);
-    obj.Set("x", Number::New(env, x));
-    obj.Set("y", Number::New(env, y));
-    obj.Set("isEnd", Boolean::New(env, isEnd));
-    return obj;
+    if (result)
+    {
+        Object obj = Object::New(env);
+        obj.Set("x", Number::New(env, x));
+        obj.Set("y", Number::New(env, y));
+        obj.Set("isEnd", Boolean::New(env, isEnd));
+        return obj;
+    }
+    else
+    {
+        Napi::Error::New(env, "Run function 'GetStar' failed.").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
 }
 
-Napi::String TGetStarJson(const CallbackInfo &info)
+Napi::Value TGetStarJson(const CallbackInfo &info)
 {
     Env env = info.Env();
     char star_buff[2048] = {0};
     bool result = GetStarJson(star_buff);
-    return String::New(env, star_buff);
+    if (result)
+    {
+        return String::New(env, star_buff);
+    }
+    else
+    {
+        Napi::Error::New(env, "Run function 'GetStarJson' failed.").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
 }
 
-Napi::Number TGetUID(const CallbackInfo &info)
+Napi::Value TGetUID(const CallbackInfo &info)
 {
     Env env = info.Env();
-    int uid = 0;
+    int uid = -1;
     bool result = GetUID(uid);
-    return Number::New(env, uid);
+    if (result)
+    {
+        return Number::New(env, uid);
+    }
+    else
+    {
+        Napi::Error::New(env, "Run function 'GetUID' failed.").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
 }
 
-Napi::Object TGetInfoLoadPicture(const CallbackInfo &info)
+Napi::Value TGetInfoLoadPicture(const CallbackInfo &info)
 {
     Env env = info.Env();
     const char *v_path = info[0].As<String>().Utf8Value().c_str();
     char *path = const_cast<char *>(v_path);
-    int uid = 0;
-    double x = 0;
-    double y = 0;
-    double a = 0;
-    bool result = GetInfoLoadPicture(path, uid, x, y, a);
-    Object obj = Object::New(env);
-    obj.Set("path", String::New(env, path));
-    obj.Set("uid", Number::New(env, uid));
-    obj.Set("x", Number::New(env, x));
-    obj.Set("y", Number::New(env, y));
-    obj.Set("a", Number::New(env, a));
-    return obj;
+    int uid = -1;
+    int &uid_ref = uid;
+    double x = -1;
+    double &x_ref = x;
+    double y = -1;
+    double &y_ref = y;
+    double a = -1;
+    double &a_ref = a;
+    bool result = GetInfoLoadPicture(path, uid_ref, x_ref, y_ref, a_ref);
+    if (result)
+    {
+        Object obj = Object::New(env);
+        obj.Set("path", String::New(env, path));
+        obj.Set("uid", Number::New(env, uid));
+        obj.Set("x", Number::New(env, x));
+        obj.Set("y", Number::New(env, y));
+        obj.Set("a", Number::New(env, a));
+        return obj;
+    }
+    else
+    {
+        Napi::Error::New(env, "Run function 'GetInfoLoadPicture' failed.").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
 }
 
-Napi::Object TGetInfoLoadVideo(const CallbackInfo &info)
+Napi::Value TGetInfoLoadVideo(const CallbackInfo &info)
 {
     Env env = info.Env();
     const char *v_path = info[0].As<String>().Utf8Value().c_str();
@@ -181,27 +305,43 @@ Napi::Object TGetInfoLoadVideo(const CallbackInfo &info)
     const char *v_pathOutFile = info[1].As<String>().Utf8Value().c_str();
     char *pathOutFile = const_cast<char *>(v_pathOutFile);
     bool result = GetInfoLoadVideo(path, pathOutFile);
-    Object obj = Object::New(env);
-    obj.Set("path", String::New(env, path));
-    obj.Set("pathOutFile", String::New(env, pathOutFile));
-    return obj;
+    if (result)
+    {
+        Object obj = Object::New(env);
+        obj.Set("path", String::New(env, path));
+        obj.Set("pathOutFile", String::New(env, pathOutFile));
+        return obj;
+    }
+    else
+    {
+        Napi::Error::New(env, "Run function 'GetInfoLoadVideo' failed.").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
 }
 
-Napi::Boolean TDebugCapture(const CallbackInfo &info)
+Napi::Value TDebugCapture(const CallbackInfo &info)
 {
     Env env = info.Env();
     bool result = DebugCapture();
-    return Boolean::New(env, result);
+    if (result)
+    {
+        return Boolean::New(env, result);
+    }
+    else
+    {
+        Napi::Error::New(env, "Run function 'DebugCapture' failed.").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
 }
 
-Napi::Number TGetLastErr(const CallbackInfo &info)
+Napi::Value TGetLastErr(const CallbackInfo &info)
 {
     Env env = info.Env();
     int err = GetLastErr();
     return Number::New(env, err);
 }
 
-Napi::String TGetLastErrMsg(const CallbackInfo &info)
+Napi::Value TGetLastErrMsg(const CallbackInfo &info)
 {
     Env env = info.Env();
     int buff_size = 2048;
