@@ -5,9 +5,8 @@ on:
   push:
     branches:
       - main
-  release:
-    types:
-      - created
+    tags:
+      - "v*"
 
 env:
   FORCE_COLOR: 1
