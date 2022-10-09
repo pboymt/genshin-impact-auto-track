@@ -2,6 +2,16 @@
   "name": "genshin-impact-auto-track",
   "version": "0.0.1",
   "description": "Node.js N-API binding of GenshinImpact AutoTrack DLL.",
+  "keywords": [
+    "genshin",
+    "impact"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pboymt/genshin-impact-auto-track.git"
+  },
+  "author": "pboymt",
+  "license": "MIT",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "os": [
@@ -24,24 +34,20 @@
     "package_name": "napi-v{napi_build_version}-{platform}-{libc}-{arch}.tar.gz",
     "host": "https://github.com/pboymt/genshin-impact-auto-track/releases/download/",
     "napi_versions": [
+      4,
       8
     ]
   },
   "scripts": {
-    "prebuild": "pwsh download-dll.ps1",
+    "prebuild": "pwsh download-dll.ps1 && npm run configure",
     "install": "node-pre-gyp install --fallback-to-build",
     "test": "node ./test",
-    "build": "npm run prebuild && node-pre-gyp build",
-    "build:debug": "npm run prebuild && node-pre-gyp build --debug",
+    "configure": "node-pre-gyp configure",
+    "build": "node-pre-gyp build",
+    "build:debug": "node-pre-gyp build --debug",
     "rebuild": "node-pre-gyp rebuild",
     "pack": "node-pre-gyp package"
   },
-  "keywords": [
-    "genshin",
-    "impact"
-  ],
-  "author": "pboymt",
-  "license": "MIT",
   "dependencies": {
     "@mapbox/node-pre-gyp": "^1.0.10",
     "node-addon-api": "*"
