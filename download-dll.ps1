@@ -1,3 +1,10 @@
+# Check if directory cvAutoTrack exists
+if (Test-Path -Path ".\cvAutoTrack") {
+    # If it exists, skip download and exit
+    Write-Host "cvAutoTrack directory already exists. Skipping download."
+    exit 0
+}
+
 $latest_release = Invoke-WebRequest "https://api.github.com/repos/GengGode/GenshinImpact_AutoTrack_DLL/releases/latest"
 $latest_release_url = $latest_release.content | ConvertFrom-Json | Select-Object -ExpandProperty assets | Select-Object -ExpandProperty browser_download_url
 Write-Output "Downloading latest 'GenshinImpact_AutoTrack_DLL' release from $latest_release_url"
