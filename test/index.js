@@ -26,7 +26,7 @@ process.on('beforeExit', () => {
     }
 
 })().catch((err) => {
-    console.error(err);
+    console.log(err);
     console.log(addon.getLastErr());
     console.log(addon.getLastErrMsg());
 
