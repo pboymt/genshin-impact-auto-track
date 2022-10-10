@@ -355,6 +355,10 @@ Object ModuleInit(Env env, Object exports)
     exports.Set(String::New(env, "version"), Function::New(env, TVersion));
     exports.Set(String::New(env, "init"), Function::New(env, TInit));
     exports.Set(String::New(env, "uninit"), Function::New(env, TUninit));
+    exports.Set(String::New(env, "startServe"), Function::New(env, TStartServe));
+    exports.Set(String::New(env, "stopServe"), Function::New(env, TStopServe));
+    exports.Set(String::New(env, "setUseBitbltCaptureMode"), Function::New(env, TSetUseBitbltCaptureMode));
+    exports.Set(String::New(env, "setUseDx11CaptureMode"), Function::New(env, TSetUseDx11CaptureMode));
     exports.Set(String::New(env, "setHandle"), Function::New(env, TSetHandle));
     exports.Set(String::New(env, "setWorldCenter"), Function::New(env, TSetWorldCenter));
     exports.Set(String::New(env, "setWorldScale"), Function::New(env, TSetWorldScale));

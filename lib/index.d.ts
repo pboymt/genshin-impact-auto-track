@@ -72,6 +72,26 @@ declare module 'genshin-impact-auto-track' {
     export function uninit(): boolean;
 
     /**
+     * （未完成）开始服务，开启循环检测线程。
+     */
+    export function startServe(): boolean;
+
+    /**
+     * （未完成）停止服务，停止循环检测线程。
+     */
+    export function stopServe(): boolean;
+
+    /**
+     * 设置使用Bitblt截图，默认启用，速度较快，效果好，但某些系统不支持。
+     */
+    export function setUseBitbltCaptureMode(): boolean;
+
+    /**
+     * 设置使用DirectX截图，效果较差，但支持win11及以上系统。
+     */
+    export function setUseDx11CaptureMode(): boolean;
+
+    /**
      * 设置原神客户端的窗口句柄。
      *
      * ### 参数
