@@ -11,3 +11,7 @@ Node.js N-API binding of [GenshinImpact AutoTrack DLL](https://github.com/GengGo
 
 关于原工具的更多信息，请参阅 [GenshinImpact AutoTrack DLL](https://github.com/GengGode/GenshinImpact_AutoTrack_DLL) 内的更多信息。
 
+## 注意事项
+
+- 本模块仅支持 Windows 系统。
+- Windows 11 系统需要执行 `setUseDx11CaptureMode` 方法，否则无法正常截图。 
