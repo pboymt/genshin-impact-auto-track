@@ -1,6 +1,6 @@
 {
   "name": "genshin-impact-auto-track",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Node.js N-API binding of GenshinImpact AutoTrack DLL.",
   "keywords": [
     "genshin",
