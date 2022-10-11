@@ -3,6 +3,16 @@
 
 using namespace Napi;
 
+Napi::Error HandleError(Napi::Env env)
+{
+    int error_code = GetLastErr();
+    char msg_buff[1024];
+    GetLastErrMsg(msg_buff, 1024);
+    // Combine the error code and message into a single string
+    std::string error_msg = std::to_string(error_code) + ": \n" + msg_buff;
+    return Napi::Error::New(env, error_msg);
+}
+
 Napi::Value TVersion(const CallbackInfo &info)
 {
     Env env = info.Env();
@@ -15,7 +25,17 @@ Napi::Value TInit(const CallbackInfo &info)
 {
     Env env = info.Env();
     bool result = init();
-    return Boolean::New(env, result);
+    if (result)
+    {
+        return Boolean::New(env, true);
+    }
+    else
+    {
+        // auto error = HandleError(env);
+        // error.ThrowAsJavaScriptException();
+        Napi::Error::New(env, "Run function 'init' failed").ThrowAsJavaScriptException();
+        return Boolean::New(env, false);
+    }
 }
 
 Napi::Value TUninit(const CallbackInfo &info)
@@ -35,6 +55,8 @@ Napi::Value TStartServe(const CallbackInfo &info)
     }
     else
     {
+        // auto error = HandleError(env);
+        // error.ThrowAsJavaScriptException();
         Napi::Error::New(env, "Run function 'startServe' failed").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -50,6 +72,8 @@ Napi::Value TStopServe(const CallbackInfo &info)
     }
     else
     {
+        // auto error = HandleError(env);
+        // error.ThrowAsJavaScriptException();
         Napi::Error::New(env, "Run function 'stopServe' failed").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -65,6 +89,8 @@ Napi::Value TSetUseBitbltCaptureMode(const CallbackInfo &info)
     }
     else
     {
+        // auto error = HandleError(env);
+        // error.ThrowAsJavaScriptException();
         Napi::Error::New(env, "Run function 'SetUseBitbltCaptureMode' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -80,6 +106,8 @@ Napi::Value TSetUseDx11CaptureMode(const CallbackInfo &info)
     }
     else
     {
+        // auto error = HandleError(env);
+        // error.ThrowAsJavaScriptException();
         Napi::Error::New(env, "Run function 'SetUseDx11CaptureMode' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -96,6 +124,8 @@ Napi::Value TSetHandle(const CallbackInfo &info)
     }
     else
     {
+        // auto error = HandleError(env);
+        // error.ThrowAsJavaScriptException();
         Napi::Error::New(env, "Run function 'SetHandle' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -113,6 +143,8 @@ Napi::Value TSetWorldCenter(const CallbackInfo &info)
     }
     else
     {
+        // auto error = HandleError(env);
+        // error.ThrowAsJavaScriptException();
         Napi::Error::New(env, "Run function 'SetWorldCenter' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -129,6 +161,8 @@ Napi::Value TSetWorldScale(const CallbackInfo &info)
     }
     else
     {
+        // auto error = HandleError(env);
+        // error.ThrowAsJavaScriptException();
         Napi::Error::New(env, "Run function 'SetWorldScale' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -153,6 +187,8 @@ Napi::Value TGetTransformOfMap(const CallbackInfo &info)
     }
     else
     {
+        // auto error = HandleError(env);
+        // error.ThrowAsJavaScriptException();
         Napi::Error::New(env, "Run function 'GetTransformOfMap' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -175,6 +211,8 @@ Napi::Value TGetPositionOfMap(const CallbackInfo &info)
     }
     else
     {
+        // auto error = HandleError(env);
+        // error.ThrowAsJavaScriptException();
         Napi::Error::New(env, "Run function 'GetPositionOfMap' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -191,6 +229,8 @@ Napi::Value TGetDirection(const CallbackInfo &info)
     }
     else
     {
+        // auto error = HandleError(env);
+        // error.ThrowAsJavaScriptException();
         Napi::Error::New(env, "Run function 'GetDirection' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -207,6 +247,8 @@ Napi::Value TGetRotation(const CallbackInfo &info)
     }
     else
     {
+        // auto error = HandleError(env);
+        // error.ThrowAsJavaScriptException();
         Napi::Error::New(env, "Run function 'GetRotation' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -229,6 +271,8 @@ Napi::Value TGetStar(const CallbackInfo &info)
     }
     else
     {
+        // auto error = HandleError(env);
+        // error.ThrowAsJavaScriptException();
         Napi::Error::New(env, "Run function 'GetStar' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -245,6 +289,8 @@ Napi::Value TGetStarJson(const CallbackInfo &info)
     }
     else
     {
+        // auto error = HandleError(env);
+        // error.ThrowAsJavaScriptException();
         Napi::Error::New(env, "Run function 'GetStarJson' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -261,6 +307,8 @@ Napi::Value TGetUID(const CallbackInfo &info)
     }
     else
     {
+        // auto error = HandleError(env);
+        // error.ThrowAsJavaScriptException();
         Napi::Error::New(env, "Run function 'GetUID' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -292,6 +340,8 @@ Napi::Value TGetInfoLoadPicture(const CallbackInfo &info)
     }
     else
     {
+        // auto error = HandleError(env);
+        // error.ThrowAsJavaScriptException();
         Napi::Error::New(env, "Run function 'GetInfoLoadPicture' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -314,6 +364,8 @@ Napi::Value TGetInfoLoadVideo(const CallbackInfo &info)
     }
     else
     {
+        // auto error = HandleError(env);
+        // error.ThrowAsJavaScriptException();
         Napi::Error::New(env, "Run function 'GetInfoLoadVideo' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -329,6 +381,8 @@ Napi::Value TDebugCapture(const CallbackInfo &info)
     }
     else
     {
+        // auto error = HandleError(env);
+        // error.ThrowAsJavaScriptException();
         Napi::Error::New(env, "Run function 'DebugCapture' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
@@ -348,6 +402,44 @@ Napi::Value TGetLastErrMsg(const CallbackInfo &info)
     char msg_buff[2048] = {0};
     GetLastErrMsg(msg_buff, buff_size);
     return String::New(env, msg_buff);
+}
+
+Napi::Value TGetCompileVersion(const CallbackInfo &info)
+{
+    Env env = info.Env();
+    int buff_size = 2048;
+    char msg_buff[2048] = {0};
+    bool result = GetCompileVersion(msg_buff, buff_size);
+    if (result)
+    {
+        return String::New(env, msg_buff);
+    }
+    else
+    {
+        auto error = HandleError(env);
+        error.ThrowAsJavaScriptException();
+        // Napi::Error::New(env, "Run function 'GetCompileVersion' failed.").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
+}
+
+Napi::Value TGetCompileTime(const CallbackInfo &info)
+{
+    Env env = info.Env();
+    int buff_size = 1024;
+    char msg_buff[1024] = {0};
+    bool result = GetCompileTime(msg_buff, buff_size);
+    if (result)
+    {
+        return String::New(env, msg_buff);
+    }
+    else
+    {
+        auto error = HandleError(env);
+        error.ThrowAsJavaScriptException();
+        // Napi::Error::New(env, "Run function 'GetCompileTime' failed.").ThrowAsJavaScriptException();
+        return env.Undefined();
+    }
 }
 
 Object ModuleInit(Env env, Object exports)
@@ -374,6 +466,8 @@ Object ModuleInit(Env env, Object exports)
     exports.Set(String::New(env, "debugCapture"), Function::New(env, TDebugCapture));
     exports.Set(String::New(env, "getLastErr"), Function::New(env, TGetLastErr));
     exports.Set(String::New(env, "getLastErrMsg"), Function::New(env, TGetLastErrMsg));
+    exports.Set(String::New(env, "getCompileVersion"), Function::New(env, TGetCompileVersion));
+    exports.Set(String::New(env, "getCompileTime"), Function::New(env, TGetCompileTime));
     return exports;
 }
 
