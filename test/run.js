@@ -41,10 +41,8 @@ process.on('beforeExit', () => {
             console.log(`Star: ${star}`);
             console.log(pos);
         } catch (error) {
-            console.log('Error:')
             console.log(error);
-            console.log(addon.getLastErr());
-            // console.log(addon.getLastErrMsg());
+            console.log(addon.getLastErrMsg());
         }
         await setTimeout(1000);
     }

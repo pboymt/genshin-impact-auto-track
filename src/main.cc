@@ -3,13 +3,14 @@
 
 using namespace Napi;
 
-Napi::Error HandleError(Napi::Env env)
+Napi::Error HandleError(Napi::Env env, const char *func_name)
 {
     int error_code = GetLastErr();
     char msg_buff[1024];
     GetLastErrMsg(msg_buff, 1024);
     // Combine the error code and message into a single string
-    std::string error_msg = std::to_string(error_code) + ": \n" + msg_buff;
+    std::string error_msg = "Error in '" + std::string(func_name) + "' : \n" + msg_buff;
+    // Convert from  to UTF-8
     return Napi::Error::New(env, error_msg);
 }
 
@@ -31,9 +32,9 @@ Napi::Value TInit(const CallbackInfo &info)
     }
     else
     {
-        // auto error = HandleError(env);
-        // error.ThrowAsJavaScriptException();
-        Napi::Error::New(env, "Run function 'init' failed").ThrowAsJavaScriptException();
+        auto error = HandleError(env, "init");
+        error.ThrowAsJavaScriptException();
+        //  Napi::Error::New(env, "Run function 'init' failed").ThrowAsJavaScriptException();
         return Boolean::New(env, false);
     }
 }
@@ -55,9 +56,9 @@ Napi::Value TStartServe(const CallbackInfo &info)
     }
     else
     {
-        // auto error = HandleError(env);
-        // error.ThrowAsJavaScriptException();
-        Napi::Error::New(env, "Run function 'startServe' failed").ThrowAsJavaScriptException();
+        auto error = HandleError(env, "startServe");
+        error.ThrowAsJavaScriptException();
+        //  Napi::Error::New(env, "Run function 'startServe' failed").ThrowAsJavaScriptException();
         return env.Undefined();
     }
 }
@@ -72,9 +73,9 @@ Napi::Value TStopServe(const CallbackInfo &info)
     }
     else
     {
-        // auto error = HandleError(env);
-        // error.ThrowAsJavaScriptException();
-        Napi::Error::New(env, "Run function 'stopServe' failed").ThrowAsJavaScriptException();
+        auto error = HandleError(env, "stopServe");
+        error.ThrowAsJavaScriptException();
+        //  Napi::Error::New(env, "Run function 'stopServe' failed").ThrowAsJavaScriptException();
         return env.Undefined();
     }
 }
@@ -89,9 +90,9 @@ Napi::Value TSetUseBitbltCaptureMode(const CallbackInfo &info)
     }
     else
     {
-        // auto error = HandleError(env);
-        // error.ThrowAsJavaScriptException();
-        Napi::Error::New(env, "Run function 'SetUseBitbltCaptureMode' failed.").ThrowAsJavaScriptException();
+        auto error = HandleError(env, "setUseBitbltCaptureMode");
+        error.ThrowAsJavaScriptException();
+        //  Napi::Error::New(env, "Run function 'SetUseBitbltCaptureMode' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
 }
@@ -106,9 +107,9 @@ Napi::Value TSetUseDx11CaptureMode(const CallbackInfo &info)
     }
     else
     {
-        // auto error = HandleError(env);
-        // error.ThrowAsJavaScriptException();
-        Napi::Error::New(env, "Run function 'SetUseDx11CaptureMode' failed.").ThrowAsJavaScriptException();
+        auto error = HandleError(env, "setUseDx11CaptureMode");
+        error.ThrowAsJavaScriptException();
+        //  Napi::Error::New(env, "Run function 'SetUseDx11CaptureMode' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
 }
@@ -124,9 +125,9 @@ Napi::Value TSetHandle(const CallbackInfo &info)
     }
     else
     {
-        // auto error = HandleError(env);
-        // error.ThrowAsJavaScriptException();
-        Napi::Error::New(env, "Run function 'SetHandle' failed.").ThrowAsJavaScriptException();
+        auto error = HandleError(env, "setHandle");
+        error.ThrowAsJavaScriptException();
+        //  Napi::Error::New(env, "Run function 'SetHandle' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
 }
@@ -143,9 +144,9 @@ Napi::Value TSetWorldCenter(const CallbackInfo &info)
     }
     else
     {
-        // auto error = HandleError(env);
-        // error.ThrowAsJavaScriptException();
-        Napi::Error::New(env, "Run function 'SetWorldCenter' failed.").ThrowAsJavaScriptException();
+        auto error = HandleError(env, "setWorldCenter");
+        error.ThrowAsJavaScriptException();
+        //  Napi::Error::New(env, "Run function 'SetWorldCenter' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
 }
@@ -161,9 +162,9 @@ Napi::Value TSetWorldScale(const CallbackInfo &info)
     }
     else
     {
-        // auto error = HandleError(env);
-        // error.ThrowAsJavaScriptException();
-        Napi::Error::New(env, "Run function 'SetWorldScale' failed.").ThrowAsJavaScriptException();
+        auto error = HandleError(env, "setWorldScale");
+        error.ThrowAsJavaScriptException();
+        //  Napi::Error::New(env, "Run function 'SetWorldScale' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
 }
@@ -176,22 +177,22 @@ Napi::Value TGetTransformOfMap(const CallbackInfo &info)
     double a = -1;
     int mapId = -1;
     bool result = GetTransformOfMap(x, y, a, mapId);
-    if (result)
-    {
+    // if (result)
+    // {
         Object obj = Object::New(env);
         obj.Set("x", Number::New(env, x));
         obj.Set("y", Number::New(env, y));
         obj.Set("a", Number::New(env, a));
         obj.Set("mapId", Number::New(env, mapId));
         return obj;
-    }
-    else
-    {
-        // auto error = HandleError(env);
-        // error.ThrowAsJavaScriptException();
-        Napi::Error::New(env, "Run function 'GetTransformOfMap' failed.").ThrowAsJavaScriptException();
-        return env.Undefined();
-    }
+    // }
+    // else
+    // {
+    //     auto error = HandleError(env, "getTransformOfMap");
+    //     error.ThrowAsJavaScriptException();
+    //     //  Napi::Error::New(env, "Run function 'GetTransformOfMap' failed.").ThrowAsJavaScriptException();
+    //     return env.Undefined();
+    // }
 }
 
 Napi::Value TGetPositionOfMap(const CallbackInfo &info)
@@ -211,9 +212,9 @@ Napi::Value TGetPositionOfMap(const CallbackInfo &info)
     }
     else
     {
-        // auto error = HandleError(env);
-        // error.ThrowAsJavaScriptException();
-        Napi::Error::New(env, "Run function 'GetPositionOfMap' failed.").ThrowAsJavaScriptException();
+        auto error = HandleError(env, "getPositionOfMap");
+        error.ThrowAsJavaScriptException();
+        //  Napi::Error::New(env, "Run function 'GetPositionOfMap' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
 }
@@ -229,9 +230,9 @@ Napi::Value TGetDirection(const CallbackInfo &info)
     }
     else
     {
-        // auto error = HandleError(env);
-        // error.ThrowAsJavaScriptException();
-        Napi::Error::New(env, "Run function 'GetDirection' failed.").ThrowAsJavaScriptException();
+        auto error = HandleError(env, "getDirection");
+        error.ThrowAsJavaScriptException();
+        //  Napi::Error::New(env, "Run function 'GetDirection' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
 }
@@ -247,9 +248,9 @@ Napi::Value TGetRotation(const CallbackInfo &info)
     }
     else
     {
-        // auto error = HandleError(env);
-        // error.ThrowAsJavaScriptException();
-        Napi::Error::New(env, "Run function 'GetRotation' failed.").ThrowAsJavaScriptException();
+        auto error = HandleError(env, "getRotation");
+        error.ThrowAsJavaScriptException();
+        //  Napi::Error::New(env, "Run function 'GetRotation' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
 }
@@ -271,9 +272,9 @@ Napi::Value TGetStar(const CallbackInfo &info)
     }
     else
     {
-        // auto error = HandleError(env);
-        // error.ThrowAsJavaScriptException();
-        Napi::Error::New(env, "Run function 'GetStar' failed.").ThrowAsJavaScriptException();
+        auto error = HandleError(env, "getStar");
+        error.ThrowAsJavaScriptException();
+        //  Napi::Error::New(env, "Run function 'GetStar' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
 }
@@ -289,9 +290,9 @@ Napi::Value TGetStarJson(const CallbackInfo &info)
     }
     else
     {
-        // auto error = HandleError(env);
-        // error.ThrowAsJavaScriptException();
-        Napi::Error::New(env, "Run function 'GetStarJson' failed.").ThrowAsJavaScriptException();
+        auto error = HandleError(env, "getStarJson");
+        error.ThrowAsJavaScriptException();
+        //  Napi::Error::New(env, "Run function 'GetStarJson' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
 }
@@ -307,9 +308,9 @@ Napi::Value TGetUID(const CallbackInfo &info)
     }
     else
     {
-        // auto error = HandleError(env);
-        // error.ThrowAsJavaScriptException();
-        Napi::Error::New(env, "Run function 'GetUID' failed.").ThrowAsJavaScriptException();
+        auto error = HandleError(env, "getUID");
+        error.ThrowAsJavaScriptException();
+        //  Napi::Error::New(env, "Run function 'GetUID' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
 }
@@ -340,9 +341,9 @@ Napi::Value TGetInfoLoadPicture(const CallbackInfo &info)
     }
     else
     {
-        // auto error = HandleError(env);
-        // error.ThrowAsJavaScriptException();
-        Napi::Error::New(env, "Run function 'GetInfoLoadPicture' failed.").ThrowAsJavaScriptException();
+        auto error = HandleError(env, "getInfoLoadPicture");
+        error.ThrowAsJavaScriptException();
+        //  Napi::Error::New(env, "Run function 'GetInfoLoadPicture' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
 }
@@ -364,9 +365,9 @@ Napi::Value TGetInfoLoadVideo(const CallbackInfo &info)
     }
     else
     {
-        // auto error = HandleError(env);
-        // error.ThrowAsJavaScriptException();
-        Napi::Error::New(env, "Run function 'GetInfoLoadVideo' failed.").ThrowAsJavaScriptException();
+        auto error = HandleError(env, "getInfoLoadVideo");
+        error.ThrowAsJavaScriptException();
+        //  Napi::Error::New(env, "Run function 'GetInfoLoadVideo' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
 }
@@ -381,9 +382,9 @@ Napi::Value TDebugCapture(const CallbackInfo &info)
     }
     else
     {
-        // auto error = HandleError(env);
-        // error.ThrowAsJavaScriptException();
-        Napi::Error::New(env, "Run function 'DebugCapture' failed.").ThrowAsJavaScriptException();
+        auto error = HandleError(env, "debugCapture");
+        error.ThrowAsJavaScriptException();
+        //  Napi::Error::New(env, "Run function 'DebugCapture' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
 }
@@ -416,9 +417,9 @@ Napi::Value TGetCompileVersion(const CallbackInfo &info)
     }
     else
     {
-        auto error = HandleError(env);
+        auto error = HandleError(env, "getCompileVersion");
         error.ThrowAsJavaScriptException();
-        // Napi::Error::New(env, "Run function 'GetCompileVersion' failed.").ThrowAsJavaScriptException();
+        ////  Napi::Error::New(env, "Run function 'GetCompileVersion' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
 }
@@ -435,9 +436,9 @@ Napi::Value TGetCompileTime(const CallbackInfo &info)
     }
     else
     {
-        auto error = HandleError(env);
+        auto error = HandleError(env, "getCompileTime");
         error.ThrowAsJavaScriptException();
-        // Napi::Error::New(env, "Run function 'GetCompileTime' failed.").ThrowAsJavaScriptException();
+        ////  Napi::Error::New(env, "Run function 'GetCompileTime' failed.").ThrowAsJavaScriptException();
         return env.Undefined();
     }
 }
