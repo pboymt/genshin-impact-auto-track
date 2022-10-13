@@ -1,474 +1,315 @@
-#include <napi.h>
-#include "../cvAutoTrack/cvAutoTrack.h"
+#include "main.h"
 
-using namespace Napi;
-
-Napi::Error HandleError(Napi::Env env, const char *func_name)
+Napi::Object CreateResult(Napi::Env env, bool success, Napi::Value value)
 {
-    int error_code = GetLastErr();
-    char msg_buff[1024];
-    GetLastErrMsg(msg_buff, 1024);
-    // Combine the error code and message into a single string
-    std::string error_msg = "Error in '" + std::string(func_name) + "' : \n" + msg_buff;
-    // Convert from  to UTF-8
-    return Napi::Error::New(env, error_msg);
+    Napi::Object object = Napi::Object::New(env);
+    if (success)
+    {
+        object.Set("code", 0);
+        object.Set("msg", "success");
+        if (!value.IsUndefined() && !value.IsNull())
+        {
+            object.Set("data", value);
+        }
+    }
+    else
+    {
+        int error_code = GetLastErr();
+        char last_error[1024] = {0};
+        GetLastErrMsg(last_error, 1024);
+        char last_error_json[1024] = {0};
+        GetLastErrJson(last_error_json, 1024);
+        if (error_code == 0)
+        {
+            object.Set("code", -1);
+            object.Set("msg", "unknown error");
+            object.Set("data", value);
+        }
+        else
+        {
+            object.Set("code", error_code);
+            object.Set("msg", last_error);
+            object.Set("data", last_error_json);
+        }
+    }
+    return object;
 }
 
-Napi::Value TVersion(const CallbackInfo &info)
+Napi::Object ATVersion(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
-    char version_buff[1024] = {0};
-    bool result = verison(version_buff);
-    return String::New(env, version_buff);
+    Napi::Env env = info.Env();
+    char version[1024] = {0};
+    bool result = verison(version);
+    return CreateResult(env, result, Napi::String::New(env, version));
 }
 
-Napi::Value TInit(const CallbackInfo &info)
+Napi::Object ATInit(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     bool result = init();
-    if (result)
-    {
-        return Boolean::New(env, true);
-    }
-    else
-    {
-        auto error = HandleError(env, "init");
-        error.ThrowAsJavaScriptException();
-        //  Napi::Error::New(env, "Run function 'init' failed").ThrowAsJavaScriptException();
-        return Boolean::New(env, false);
-    }
+    return CreateResult(env, result, env.Null());
 }
 
-Napi::Value TUninit(const CallbackInfo &info)
+Napi::Object ATUninit(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     bool result = uninit();
-    return Boolean::New(env, result);
+    return CreateResult(env, result, env.Null());
 }
 
-Napi::Value TStartServe(const CallbackInfo &info)
+Napi::Object ATStartServe(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     bool result = startServe();
-    if (result)
-    {
-        return Boolean::New(env, result);
-    }
-    else
-    {
-        auto error = HandleError(env, "startServe");
-        error.ThrowAsJavaScriptException();
-        //  Napi::Error::New(env, "Run function 'startServe' failed").ThrowAsJavaScriptException();
-        return env.Undefined();
-    }
+    return CreateResult(env, result, env.Null());
 }
 
-Napi::Value TStopServe(const CallbackInfo &info)
+Napi::Object ATStopServe(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     bool result = stopServe();
-    if (result)
-    {
-        return Boolean::New(env, result);
-    }
-    else
-    {
-        auto error = HandleError(env, "stopServe");
-        error.ThrowAsJavaScriptException();
-        //  Napi::Error::New(env, "Run function 'stopServe' failed").ThrowAsJavaScriptException();
-        return env.Undefined();
-    }
+    return CreateResult(env, result, env.Null());
 }
 
-Napi::Value TSetUseBitbltCaptureMode(const CallbackInfo &info)
+Napi::Object ATSetUseBitbltCaptureMode(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     bool result = SetUseBitbltCaptureMode();
-    if (result)
-    {
-        return Boolean::New(env, true);
-    }
-    else
-    {
-        auto error = HandleError(env, "setUseBitbltCaptureMode");
-        error.ThrowAsJavaScriptException();
-        //  Napi::Error::New(env, "Run function 'SetUseBitbltCaptureMode' failed.").ThrowAsJavaScriptException();
-        return env.Undefined();
-    }
+    return CreateResult(env, result, env.Null());
 }
 
-Napi::Value TSetUseDx11CaptureMode(const CallbackInfo &info)
+Napi::Object ATSetUseDx11CaptureMode(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     bool result = SetUseDx11CaptureMode();
-    if (result)
+    return CreateResult(env, result, env.Null());
+}
+
+Napi::Object ATSetHandle(const Napi::CallbackInfo &info)
+{
+    Napi::Env env = info.Env();
+    Napi::Number handle;
+    if (info.Length() < 1)
     {
-        return Boolean::New(env, true);
+        handle = Napi::Number::New(env, 0);
     }
     else
     {
-        auto error = HandleError(env, "setUseDx11CaptureMode");
-        error.ThrowAsJavaScriptException();
-        //  Napi::Error::New(env, "Run function 'SetUseDx11CaptureMode' failed.").ThrowAsJavaScriptException();
-        return env.Undefined();
+        handle = info[0].As<Napi::Number>();
     }
+    bool result = SetHandle(handle.Int64Value());
+    return CreateResult(env, result, env.Null());
 }
 
-Napi::Value TSetHandle(const CallbackInfo &info)
+Napi::Object ATSetWorldCenter(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
-    long long int handle = info[0].As<Number>().Int64Value();
-    bool result = SetHandle(handle);
-    if (result)
+    Napi::Env env = info.Env();
+    Napi::Number x;
+    Napi::Number y;
+    if (info.Length() < 2)
     {
-        return Boolean::New(env, true);
+        x = Napi::Number::New(env, 0);
+        y = Napi::Number::New(env, 0);
     }
     else
     {
-        auto error = HandleError(env, "setHandle");
-        error.ThrowAsJavaScriptException();
-        //  Napi::Error::New(env, "Run function 'SetHandle' failed.").ThrowAsJavaScriptException();
-        return env.Undefined();
+        x = info[0].As<Napi::Number>();
+        y = info[1].As<Napi::Number>();
     }
+    bool result = SetWorldCenter(x.DoubleValue(), y.DoubleValue());
+    return CreateResult(env, result, env.Null());
 }
 
-Napi::Value TSetWorldCenter(const CallbackInfo &info)
+Napi::Object ATSetWorldScale(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
-    double x = info[0].As<Number>().DoubleValue();
-    double y = info[1].As<Number>().DoubleValue();
-    bool result = SetWorldCenter(x, y);
-    if (result)
+    Napi::Env env = info.Env();
+    Napi::Number scale;
+    if (info.Length() < 1)
     {
-        return Boolean::New(env, true);
+        scale = Napi::Number::New(env, 1.0);
     }
     else
     {
-        auto error = HandleError(env, "setWorldCenter");
-        error.ThrowAsJavaScriptException();
-        //  Napi::Error::New(env, "Run function 'SetWorldCenter' failed.").ThrowAsJavaScriptException();
-        return env.Undefined();
+        scale = info[0].As<Napi::Number>();
     }
+    bool result = SetWorldScale(scale.DoubleValue());
+    return CreateResult(env, result, env.Null());
 }
 
-Napi::Value TSetWorldScale(const CallbackInfo &info)
+Napi::Object ATGetTransformOfMap(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
-    double scale = info[0].As<Number>().DoubleValue();
-    bool result = SetWorldScale(scale);
-    if (result)
-    {
-        return Boolean::New(env, true);
-    }
-    else
-    {
-        auto error = HandleError(env, "setWorldScale");
-        error.ThrowAsJavaScriptException();
-        //  Napi::Error::New(env, "Run function 'SetWorldScale' failed.").ThrowAsJavaScriptException();
-        return env.Undefined();
-    }
-}
-
-Napi::Value TGetTransformOfMap(const CallbackInfo &info)
-{
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     double x = -1;
     double y = -1;
     double a = -1;
-    int mapId = -1;
-    bool result = GetTransformOfMap(x, y, a, mapId);
-    // if (result)
-    // {
-        Object obj = Object::New(env);
-        obj.Set("x", Number::New(env, x));
-        obj.Set("y", Number::New(env, y));
-        obj.Set("a", Number::New(env, a));
-        obj.Set("mapId", Number::New(env, mapId));
-        return obj;
-    // }
-    // else
-    // {
-    //     auto error = HandleError(env, "getTransformOfMap");
-    //     error.ThrowAsJavaScriptException();
-    //     //  Napi::Error::New(env, "Run function 'GetTransformOfMap' failed.").ThrowAsJavaScriptException();
-    //     return env.Undefined();
-    // }
+    int map_id = -1;
+    bool result = GetTransformOfMap(x, y, a, map_id);
+    Napi::Object object = Napi::Object::New(env);
+    object.Set("x", x);
+    object.Set("y", y);
+    object.Set("a", a);
+    object.Set("map_id", map_id);
+    return CreateResult(env, result, object);
 }
 
-Napi::Value TGetPositionOfMap(const CallbackInfo &info)
+Napi::Object ATGetPositionOfMap(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     double x = -1;
     double y = -1;
-    int mapId = -1;
-    bool result = GetPositionOfMap(x, y, mapId);
-    if (result)
-    {
-        Object obj = Object::New(env);
-        obj.Set("x", Number::New(env, x));
-        obj.Set("y", Number::New(env, y));
-        obj.Set("mapId", Number::New(env, mapId));
-        return obj;
-    }
-    else
-    {
-        auto error = HandleError(env, "getPositionOfMap");
-        error.ThrowAsJavaScriptException();
-        //  Napi::Error::New(env, "Run function 'GetPositionOfMap' failed.").ThrowAsJavaScriptException();
-        return env.Undefined();
-    }
+    int map_id = -1;
+    bool result = GetPositionOfMap(x, y, map_id);
+    Napi::Object object = Napi::Object::New(env);
+    object.Set("x", x);
+    object.Set("y", y);
+    object.Set("map_id", map_id);
+    return CreateResult(env, result, object);
 }
 
-Napi::Value TGetDirection(const CallbackInfo &info)
+Napi::Object ATGetDirection(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     double a = -1;
     bool result = GetDirection(a);
-    if (result)
-    {
-        return Number::New(env, a);
-    }
-    else
-    {
-        auto error = HandleError(env, "getDirection");
-        error.ThrowAsJavaScriptException();
-        //  Napi::Error::New(env, "Run function 'GetDirection' failed.").ThrowAsJavaScriptException();
-        return env.Undefined();
-    }
+    return CreateResult(env, result, Napi::Number::New(env, a));
 }
 
-Napi::Value TGetRotation(const CallbackInfo &info)
+Napi::Object ATGetRotation(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     double a = -1;
     bool result = GetRotation(a);
-    if (result)
-    {
-        return Number::New(env, a);
-    }
-    else
-    {
-        auto error = HandleError(env, "getRotation");
-        error.ThrowAsJavaScriptException();
-        //  Napi::Error::New(env, "Run function 'GetRotation' failed.").ThrowAsJavaScriptException();
-        return env.Undefined();
-    }
+    return CreateResult(env, result, Napi::Number::New(env, a));
 }
 
-Napi::Value TGetStar(const CallbackInfo &info)
+Napi::Object ATGetStar(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     double x = -1;
     double y = -1;
-    bool isEnd = false;
-    bool result = GetStar(x, y, isEnd);
-    if (result)
-    {
-        Object obj = Object::New(env);
-        obj.Set("x", Number::New(env, x));
-        obj.Set("y", Number::New(env, y));
-        obj.Set("isEnd", Boolean::New(env, isEnd));
-        return obj;
-    }
-    else
-    {
-        auto error = HandleError(env, "getStar");
-        error.ThrowAsJavaScriptException();
-        //  Napi::Error::New(env, "Run function 'GetStar' failed.").ThrowAsJavaScriptException();
-        return env.Undefined();
-    }
+    bool is_end = false;
+    bool result = GetStar(x, y, is_end);
+    Napi::Object object = Napi::Object::New(env);
+    object.Set("x", x);
+    object.Set("y", y);
+    object.Set("isEnd", is_end);
+    return CreateResult(env, result, object);
 }
 
-Napi::Value TGetStarJson(const CallbackInfo &info)
+Napi::Object ATGetStarJson(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
-    char star_buff[2048] = {0};
-    bool result = GetStarJson(star_buff);
-    if (result)
-    {
-        return String::New(env, star_buff);
-    }
-    else
-    {
-        auto error = HandleError(env, "getStarJson");
-        error.ThrowAsJavaScriptException();
-        //  Napi::Error::New(env, "Run function 'GetStarJson' failed.").ThrowAsJavaScriptException();
-        return env.Undefined();
-    }
+    Napi::Env env = info.Env();
+    char json[1024] = {0};
+    bool result = GetStarJson(json);
+    return CreateResult(env, result, Napi::String::New(env, json));
 }
 
-Napi::Value TGetUID(const CallbackInfo &info)
+Napi::Object ATGetUID(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     int uid = -1;
     bool result = GetUID(uid);
-    if (result)
+    return CreateResult(env, result, Napi::Number::New(env, uid));
+}
+
+Napi::Object ATGetInfoLoadPicture(const Napi::CallbackInfo &info)
+{
+    Napi::Env env = info.Env();
+    /// Not implemented
+    return CreateResult(env, false, Napi::String::New(env, "\u65b9\u6cd5\u672a\u5b9e\u73b0"));
+}
+
+Napi::Object ATGetInfoLoadVideo(const Napi::CallbackInfo &info)
+{
+    Napi::Env env = info.Env();
+    /// Not implemented
+    return CreateResult(env, false, Napi::String::New(env, "\u65b9\u6cd5\u672a\u5b9e\u73b0"));
+}
+
+Napi::Object ATDebugCapture(const Napi::CallbackInfo &info)
+{
+    Napi::Env env = info.Env();
+    if (info.Length() < 1)
     {
-        return Number::New(env, uid);
+        bool result = DebugCapture();
+        return CreateResult(env, result, Napi::String::New(env, "Capture.png"));
     }
     else
     {
-        auto error = HandleError(env, "getUID");
-        error.ThrowAsJavaScriptException();
-        //  Napi::Error::New(env, "Run function 'GetUID' failed.").ThrowAsJavaScriptException();
-        return env.Undefined();
+        Napi::String arg_path = info[0].As<Napi::String>();
+        const char *path_buff = arg_path.Utf8Value().c_str();
+        int path_buff_size = strlen(path_buff);
+        bool result = DebugCapturePath(path_buff, path_buff_size);
+        return CreateResult(env, result, arg_path);
     }
 }
 
-Napi::Value TGetInfoLoadPicture(const CallbackInfo &info)
+Napi::Number ATGetLastErr(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
-    const char *v_path = info[0].As<String>().Utf8Value().c_str();
-    char *path = const_cast<char *>(v_path);
-    int uid = -1;
-    int &uid_ref = uid;
-    double x = -1;
-    double &x_ref = x;
-    double y = -1;
-    double &y_ref = y;
-    double a = -1;
-    double &a_ref = a;
-    bool result = GetInfoLoadPicture(path, uid_ref, x_ref, y_ref, a_ref);
-    if (result)
-    {
-        Object obj = Object::New(env);
-        obj.Set("path", String::New(env, path));
-        obj.Set("uid", Number::New(env, uid));
-        obj.Set("x", Number::New(env, x));
-        obj.Set("y", Number::New(env, y));
-        obj.Set("a", Number::New(env, a));
-        return obj;
-    }
-    else
-    {
-        auto error = HandleError(env, "getInfoLoadPicture");
-        error.ThrowAsJavaScriptException();
-        //  Napi::Error::New(env, "Run function 'GetInfoLoadPicture' failed.").ThrowAsJavaScriptException();
-        return env.Undefined();
-    }
+    Napi::Env env = info.Env();
+    return Napi::Number::New(env, GetLastErr());
 }
 
-Napi::Value TGetInfoLoadVideo(const CallbackInfo &info)
+Napi::String ATGetLastErrMsg(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
-    const char *v_path = info[0].As<String>().Utf8Value().c_str();
-    char *path = const_cast<char *>(v_path);
-    const char *v_pathOutFile = info[1].As<String>().Utf8Value().c_str();
-    char *pathOutFile = const_cast<char *>(v_pathOutFile);
-    bool result = GetInfoLoadVideo(path, pathOutFile);
-    if (result)
-    {
-        Object obj = Object::New(env);
-        obj.Set("path", String::New(env, path));
-        obj.Set("pathOutFile", String::New(env, pathOutFile));
-        return obj;
-    }
-    else
-    {
-        auto error = HandleError(env, "getInfoLoadVideo");
-        error.ThrowAsJavaScriptException();
-        //  Napi::Error::New(env, "Run function 'GetInfoLoadVideo' failed.").ThrowAsJavaScriptException();
-        return env.Undefined();
-    }
+    Napi::Env env = info.Env();
+    char msg[1024] = {0};
+    GetLastErrMsg(msg, 1024);
+    return Napi::String::New(env, msg);
 }
 
-Napi::Value TDebugCapture(const CallbackInfo &info)
+Napi::String ATGetLastErrJson(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
-    bool result = DebugCapture();
-    if (result)
-    {
-        return Boolean::New(env, result);
-    }
-    else
-    {
-        auto error = HandleError(env, "debugCapture");
-        error.ThrowAsJavaScriptException();
-        //  Napi::Error::New(env, "Run function 'DebugCapture' failed.").ThrowAsJavaScriptException();
-        return env.Undefined();
-    }
+    Napi::Env env = info.Env();
+    char json[2048] = {0};
+    GetLastErrJson(json, 2048);
+    return Napi::String::New(env, json);
 }
 
-Napi::Value TGetLastErr(const CallbackInfo &info)
+Napi::Object ATGetCompileVersion(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
-    int err = GetLastErr();
-    return Number::New(env, err);
+    Napi::Env env = info.Env();
+    char version[128] = {0};
+    GetCompileVersion(version, 128);
+    return CreateResult(env, true, Napi::String::New(env, version));
 }
 
-Napi::Value TGetLastErrMsg(const CallbackInfo &info)
+Napi::Object ATGetCompileTime(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
-    int buff_size = 2048;
-    char msg_buff[2048] = {0};
-    GetLastErrMsg(msg_buff, buff_size);
-    return String::New(env, msg_buff);
+    Napi::Env env = info.Env();
+    char time[128] = {0};
+    GetCompileTime(time, 128);
+    return CreateResult(env, true, Napi::String::New(env, time));
 }
 
-Napi::Value TGetCompileVersion(const CallbackInfo &info)
+Napi::Object ModuleInit(Napi::Env env, Napi::Object exports)
 {
-    Env env = info.Env();
-    int buff_size = 2048;
-    char msg_buff[2048] = {0};
-    bool result = GetCompileVersion(msg_buff, buff_size);
-    if (result)
-    {
-        return String::New(env, msg_buff);
-    }
-    else
-    {
-        auto error = HandleError(env, "getCompileVersion");
-        error.ThrowAsJavaScriptException();
-        ////  Napi::Error::New(env, "Run function 'GetCompileVersion' failed.").ThrowAsJavaScriptException();
-        return env.Undefined();
-    }
-}
-
-Napi::Value TGetCompileTime(const CallbackInfo &info)
-{
-    Env env = info.Env();
-    int buff_size = 1024;
-    char msg_buff[1024] = {0};
-    bool result = GetCompileTime(msg_buff, buff_size);
-    if (result)
-    {
-        return String::New(env, msg_buff);
-    }
-    else
-    {
-        auto error = HandleError(env, "getCompileTime");
-        error.ThrowAsJavaScriptException();
-        ////  Napi::Error::New(env, "Run function 'GetCompileTime' failed.").ThrowAsJavaScriptException();
-        return env.Undefined();
-    }
-}
-
-Object ModuleInit(Env env, Object exports)
-{
-    exports.Set(String::New(env, "version"), Function::New(env, TVersion));
-    exports.Set(String::New(env, "init"), Function::New(env, TInit));
-    exports.Set(String::New(env, "uninit"), Function::New(env, TUninit));
-    exports.Set(String::New(env, "startServe"), Function::New(env, TStartServe));
-    exports.Set(String::New(env, "stopServe"), Function::New(env, TStopServe));
-    exports.Set(String::New(env, "setUseBitbltCaptureMode"), Function::New(env, TSetUseBitbltCaptureMode));
-    exports.Set(String::New(env, "setUseDx11CaptureMode"), Function::New(env, TSetUseDx11CaptureMode));
-    exports.Set(String::New(env, "setHandle"), Function::New(env, TSetHandle));
-    exports.Set(String::New(env, "setWorldCenter"), Function::New(env, TSetWorldCenter));
-    exports.Set(String::New(env, "setWorldScale"), Function::New(env, TSetWorldScale));
-    exports.Set(String::New(env, "getTransformOfMap"), Function::New(env, TGetTransformOfMap));
-    exports.Set(String::New(env, "getPositionOfMap"), Function::New(env, TGetPositionOfMap));
-    exports.Set(String::New(env, "getDirection"), Function::New(env, TGetDirection));
-    exports.Set(String::New(env, "getRotation"), Function::New(env, TGetRotation));
-    exports.Set(String::New(env, "getStar"), Function::New(env, TGetStar));
-    exports.Set(String::New(env, "getStarJson"), Function::New(env, TGetStarJson));
-    exports.Set(String::New(env, "getUID"), Function::New(env, TGetUID));
-    exports.Set(String::New(env, "getInfoLoadPicture"), Function::New(env, TGetInfoLoadPicture));
-    exports.Set(String::New(env, "getInfoLoadVideo"), Function::New(env, TGetInfoLoadVideo));
-    exports.Set(String::New(env, "debugCapture"), Function::New(env, TDebugCapture));
-    exports.Set(String::New(env, "getLastErr"), Function::New(env, TGetLastErr));
-    exports.Set(String::New(env, "getLastErrMsg"), Function::New(env, TGetLastErrMsg));
-    exports.Set(String::New(env, "getCompileVersion"), Function::New(env, TGetCompileVersion));
-    exports.Set(String::New(env, "getCompileTime"), Function::New(env, TGetCompileTime));
+    exports.Set("version", Napi::Function::New(env, ATVersion));
+    exports.Set("init", Napi::Function::New(env, ATInit));
+    exports.Set("uninit", Napi::Function::New(env, ATUninit));
+    exports.Set("startServe", Napi::Function::New(env, ATStartServe));
+    exports.Set("stopServe", Napi::Function::New(env, ATStopServe));
+    exports.Set("setUseBitbltCaptureMode", Napi::Function::New(env, ATSetUseBitbltCaptureMode));
+    exports.Set("setUseDx11CaptureMode", Napi::Function::New(env, ATSetUseDx11CaptureMode));
+    exports.Set("setHandle", Napi::Function::New(env, ATSetHandle));
+    exports.Set("setWorldCenter", Napi::Function::New(env, ATSetWorldCenter));
+    exports.Set("setWorldScale", Napi::Function::New(env, ATSetWorldScale));
+    exports.Set("getTransformOfMap", Napi::Function::New(env, ATGetTransformOfMap));
+    exports.Set("getPositionOfMap", Napi::Function::New(env, ATGetPositionOfMap));
+    exports.Set("getDirection", Napi::Function::New(env, ATGetDirection));
+    exports.Set("getRotation", Napi::Function::New(env, ATGetRotation));
+    exports.Set("getStar", Napi::Function::New(env, ATGetStar));
+    exports.Set("getStarJson", Napi::Function::New(env, ATGetStarJson));
+    exports.Set("getUID", Napi::Function::New(env, ATGetUID));
+    exports.Set("getInfoLoadPicture", Napi::Function::New(env, ATGetInfoLoadPicture));
+    exports.Set("getInfoLoadVideo", Napi::Function::New(env, ATGetInfoLoadVideo));
+    exports.Set("debugCapture", Napi::Function::New(env, ATDebugCapture));
+    // exports.Set("debugCapturePath", Napi::Function::New(env, ATDebugCapturePath));
+    exports.Set("getLastErr", Napi::Function::New(env, ATGetLastErr));
+    exports.Set("getLastErrMsg", Napi::Function::New(env, ATGetLastErrMsg));
+    exports.Set("getLastErrJson", Napi::Function::New(env, ATGetLastErrJson));
+    exports.Set("getCompileVersion", Napi::Function::New(env, ATGetCompileVersion));
+    exports.Set("getCompileTime", Napi::Function::New(env, ATGetCompileTime));
     return exports;
 }
 
