@@ -18,6 +18,36 @@ process.on('beforeExit', () => {
     addon.uninit();
 });
 
+function testGetUID() {
+    try {
+        const uid = addon.getUID();
+        console.log(`UID:`);
+        console.log(uid);
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+function testGetStarJson() {
+    try {
+        const starJson = addon.getStarJson();
+        console.log(`StarJson:`);
+        console.log(starJson);
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+function testGetTransformOfMap() {
+    try {
+        const transformOfMap = addon.getTransformOfMap();
+        console.log(`TransformOfMap:`);
+        console.log(transformOfMap);
+    } catch (e) {
+        console.log(e);
+    }
+}
+
 (async () => {
 
     const inited = addon.init();
@@ -27,22 +57,20 @@ process.on('beforeExit', () => {
         return;
     }
 
-    // addon.setUseDx11CaptureMode();
-    addon.setHandle(0);
-    await setTimeout(3000);
+    addon.setUseDx11CaptureMode();
+    // addon.setHandle(0);
+    await setTimeout(2000);
 
     while (true) {
         try {
             console.clear();
-            const uid = addon.getUID();
-            const star = addon.getStarJson();
-            const pos = addon.getTransformOfMap();
-            console.log(`UID: ${uid}`);
-            console.log(`Star: ${star}`);
-            console.log(pos);
+            console.log(new Date().toLocaleString());
+            testGetUID();
+            testGetStarJson();
+            testGetTransformOfMap();
         } catch (error) {
-            console.log(error);
-            console.log(addon.getLastErrMsg());
+            console.log(error.message);
+            // console.log(addon.getLastErrMsg());
         }
         await setTimeout(1000);
     }
