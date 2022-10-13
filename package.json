@@ -12,8 +12,8 @@
   },
   "author": "pboymt",
   "license": "MIT",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "lib/main.js",
+  "types": "lib/main.d.ts",
   "os": [
     "win32"
   ],
@@ -54,6 +54,7 @@
     "node-addon-api": "*"
   },
   "devDependencies": {
+    "@types/node": "^18.8.5",
     "node-pre-gyp-github": "1.4.4",
     "typedoc": "^0.23.15"
   },
@@ -68,5 +69,6 @@
   "optionalDependencies": {
     "node-gyp": "8.x"
   },
-  "gypfile": true
+  "gypfile": true,
+  "cvAutoTrackVersion": "7.1.4"
 }

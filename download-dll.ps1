@@ -1,7 +1,7 @@
 param(
     [switch]$help = $false, # Show help
     [switch]$clean = $false, # Clean up the downloaded files
-    [string]$version = "latest" # Version of the DLL to download
+    [string]$version = "" # Version of the DLL to download
 )
 
 # Help
@@ -37,11 +37,32 @@ if (Test-Path -Path ".\cvAutoTrack") {
     }
 }
 
+# Check if $version is empty
+if ($version -eq "") {
+    # Get cvAutoTrack version from package.json
+    $package = Get-Content -Path ".\package.json" | ConvertFrom-Json
+    # $cvAutoTrackVersion = $package.cvAutoTrackVersion
+    # Check field cvAutoTrackVersion exists
+    if ($package.cvAutoTrackVersion) {
+        $version = $package.cvAutoTrackVersion
+    }
+    else {
+        Write-Host "cvAutoTrackVersion field not found in package.json. Using latest."
+        $version = "latest"
+    }
+}
+
+
 # Show the version to download
 Write-Host "Downloading cvAutoTrack version $version"
 
+# If $version is semver
+if ($version -match "^\d+\.\d+\.\d+$") {
+    $version = "tags/$version"
+}
+
 $latest_release = Invoke-WebRequest "https://api.github.com/repos/GengGode/GenshinImpact_AutoTrack_DLL/releases/$version"
-$latest_release_url = $latest_release.content | ConvertFrom-Json | Select-Object -ExpandProperty assets | Select-Object -ExpandProperty browser_download_url
+$latest_release_url_list = $latest_release.content | ConvertFrom-Json | Select-Object -ExpandProperty assets | Select-Object -ExpandProperty browser_download_url
 
 # If the version is latest, show the latest release version
 if ($version -eq "latest") {
@@ -50,14 +71,19 @@ if ($version -eq "latest") {
 }
 
 # Select 7z file
-$latest_release_url = $latest_release_url | Where-Object { $_ -like "*7z" }
-Write-Output "Downloading latest 'GenshinImpact_AutoTrack_DLL' release from $latest_release_url"
+$latest_release_url_7z = $latest_release_url_list | Where-Object { $_ -like "*7z" }
+Write-Output "Downloading latest 'GenshinImpact_AutoTrack_DLL' release from $latest_release_url_7z"
 
 # Download 7z file
-Invoke-WebRequest -Uri $latest_release_url -OutFile "cvAutoTrack.7z"
+Invoke-WebRequest -Uri $latest_release_url_7z -OutFile "cvAutoTrack.7z"
 
 # Extract 7z file to cvAutoTrack
 7z x cvAutoTrack.7z -o"cvAutoTrack" -y
 
 # Remove 7z file
 Remove-Item cvAutoTrack.7z
+
+# Download TEST_cvAutoTrack_Cpp.exe to cvAutoTrack
+$latest_release_url_exe = $latest_release_url_list | Where-Object { $_ -like "*TEST_cvAutoTrack_Cpp.exe" }
+Write-Output "Downloading latest 'TEST_cvAutoTrack_Cpp.exe' release from $latest_release_url_exe"
+Invoke-WebRequest -Uri $latest_release_url_exe -OutFile "cvAutoTrack\TEST_cvAutoTrack_Cpp.exe"
