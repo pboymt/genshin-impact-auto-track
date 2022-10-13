@@ -18,11 +18,16 @@
                 'CLANG_CXX_LIBRARY': 'libc++',
                 'MACOSX_DEPLOYMENT_TARGET': '10.7'
             },
-            'msvs_settings': {
-                'VCCLCompilerTool': {'ExceptionHandling': 1},
-            },
             "conditions": [
                 ["OS==\"win\"", {
+                    "defines": [
+                        "_HAS_EXCEPTIONS=1"
+                    ],
+                    "msvs_settings": {
+                        "VCCLCompilerTool": {
+                            "ExceptionHandling": 1
+                        },
+                    },
                     "libraries": ["<(module_root_dir)/cvAutoTrack/CVAUTOTRACK.lib"],
                     "copies": [
                         {
