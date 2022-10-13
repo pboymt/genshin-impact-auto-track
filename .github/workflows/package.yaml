@@ -1,0 +1,68 @@
+name: Build and package
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    tags:
+      - "v*"
+
+env:
+  FORCE_COLOR: 1
+
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          # - macos-latest
+          # - ubuntu-latest
+          - windows-latest
+        host:
+          - x64
+        target:
+          - x64
+        node:
+          - 16
+    name: ${{ matrix.os }} (node=${{ matrix.node }}, host=${{ matrix.host }}, target=${{ matrix.target }})
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          architecture: ${{ matrix.host }}
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+        if: contains(matrix.os, 'windows')
+        with:
+          msbuild-architecture: ${{ matrix.target }}
+
+      - name: Install dependencies
+        run: npm install --ignore-scripts
+
+      - name: Configure build
+        run: npm run build
+
+      - name: Run tests
+        run: npm test
+
+      - name: Package prebuilt binaries
+        run: npx node-pre-gyp package
+
+      - name: Upload binaries to commit artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: prebuilt-binaries
+          path: build/stage/*/*
+          retention-days: 7
+
+      - name: Upload binaries to GitHub Release
+        run: npx node-pre-gyp-github publish
+        env:
+          NODE_PRE_GYP_GITHUB_TOKEN: ${{ github.token }}
