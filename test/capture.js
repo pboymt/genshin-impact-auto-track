@@ -5,7 +5,7 @@ const addon = require('../lib/main');
 
     await setTimeout(4000);
 
-    addon.setUseBitbltCaptureMode();
+    // addon.setUseDx11CaptureMode();
 
     const result = addon.debugCapture();
 

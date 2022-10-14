@@ -1,14 +1,17 @@
 const { setTimeout } = require('timers/promises');
-const addon = require('../lib');
+const addon = require('..');
 
 const version = addon.version();
-console.log(`DLL version: ${version}`);
+console.log(`DLL version:`);
+console.log(version);
 
 const compileVersion = addon.getCompileVersion();
-console.log(`Compile version: ${compileVersion}`);
+console.log(`Compile version:`);
+console.log(compileVersion);
 
 const compileTime = addon.getCompileTime();
-console.log(`Compile time: ${compileTime}`);
+console.log(`Compile time:`);
+console.log(compileTime);
 
 if (process.argv.includes('--test')) {
     process.exit(0);
@@ -40,9 +43,19 @@ function testGetStarJson() {
 
 function testGetTransformOfMap() {
     try {
-        const transformOfMap = addon.getTransformOfMap();
+        const transformOfMap = addon.getPositionOfMap();
         console.log(`TransformOfMap:`);
         console.log(transformOfMap);
+    } catch (e) {
+        console.log(e);
+    }
+}
+
+function testDebugCapture() {
+    try {
+        const result = addon.debugCapture();
+        console.log(`DebugCapture:`);
+        console.log(result);
     } catch (e) {
         console.log(e);
     }
@@ -63,11 +76,13 @@ function testGetTransformOfMap() {
 
     while (true) {
         try {
-            console.clear();
+            // console.clear();
+            console.log(`----------------------------------------`);
             console.log(new Date().toLocaleString());
             testGetUID();
             testGetStarJson();
             testGetTransformOfMap();
+            testDebugCapture();
         } catch (error) {
             console.log(error.message);
             // console.log(addon.getLastErrMsg());
