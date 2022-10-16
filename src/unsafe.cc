@@ -1,7 +1,6 @@
-#include <napi.h>
-#include "../cvAutoTrack/cvAutoTrack.h"
+#include "unsafe.h"
 
-using namespace Napi;
+// using namespace Napi;
 
 Napi::Error HandleError(Napi::Env env, const char *func_name)
 {
@@ -14,45 +13,45 @@ Napi::Error HandleError(Napi::Env env, const char *func_name)
     return Napi::Error::New(env, msg_buff);
 }
 
-Napi::Value TVersion(const CallbackInfo &info)
+Napi::Value TVersion(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     char version_buff[1024] = {0};
     bool result = verison(version_buff);
-    return String::New(env, version_buff);
+    return Napi::String::New(env, version_buff);
 }
 
-Napi::Value TInit(const CallbackInfo &info)
+Napi::Value TInit(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     bool result = init();
     if (result)
     {
-        return Boolean::New(env, true);
+        return Napi::Boolean::New(env, true);
     }
     else
     {
         auto error = HandleError(env, "init");
         error.ThrowAsJavaScriptException();
         //  Napi::Error::New(env, "Run function 'init' failed").ThrowAsJavaScriptException();
-        return Boolean::New(env, false);
+        return Napi::Boolean::New(env, false);
     }
 }
 
-Napi::Value TUninit(const CallbackInfo &info)
+Napi::Value TUninit(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     bool result = uninit();
-    return Boolean::New(env, result);
+    return Napi::Boolean::New(env, result);
 }
 
-Napi::Value TStartServe(const CallbackInfo &info)
+Napi::Value TStartServe(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     bool result = startServe();
     if (result)
     {
-        return Boolean::New(env, result);
+        return Napi::Boolean::New(env, result);
     }
     else
     {
@@ -63,13 +62,13 @@ Napi::Value TStartServe(const CallbackInfo &info)
     }
 }
 
-Napi::Value TStopServe(const CallbackInfo &info)
+Napi::Value TStopServe(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     bool result = stopServe();
     if (result)
     {
-        return Boolean::New(env, result);
+        return Napi::Boolean::New(env, result);
     }
     else
     {
@@ -80,13 +79,13 @@ Napi::Value TStopServe(const CallbackInfo &info)
     }
 }
 
-Napi::Value TSetUseBitbltCaptureMode(const CallbackInfo &info)
+Napi::Value TSetUseBitbltCaptureMode(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     bool result = SetUseBitbltCaptureMode();
     if (result)
     {
-        return Boolean::New(env, true);
+        return Napi::Boolean::New(env, true);
     }
     else
     {
@@ -97,13 +96,13 @@ Napi::Value TSetUseBitbltCaptureMode(const CallbackInfo &info)
     }
 }
 
-Napi::Value TSetUseDx11CaptureMode(const CallbackInfo &info)
+Napi::Value TSetUseDx11CaptureMode(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     bool result = SetUseDx11CaptureMode();
     if (result)
     {
-        return Boolean::New(env, true);
+        return Napi::Boolean::New(env, true);
     }
     else
     {
@@ -114,14 +113,14 @@ Napi::Value TSetUseDx11CaptureMode(const CallbackInfo &info)
     }
 }
 
-Napi::Value TSetHandle(const CallbackInfo &info)
+Napi::Value TSetHandle(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
-    long long int handle = info[0].As<Number>().Int64Value();
+    Napi::Env env = info.Env();
+    long long int handle = info[0].As<Napi::Number>().Int64Value();
     bool result = SetHandle(handle);
     if (result)
     {
-        return Boolean::New(env, true);
+        return Napi::Boolean::New(env, true);
     }
     else
     {
@@ -132,15 +131,15 @@ Napi::Value TSetHandle(const CallbackInfo &info)
     }
 }
 
-Napi::Value TSetWorldCenter(const CallbackInfo &info)
+Napi::Value TSetWorldCenter(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
-    double x = info[0].As<Number>().DoubleValue();
-    double y = info[1].As<Number>().DoubleValue();
+    Napi::Env env = info.Env();
+    double x = info[0].As<Napi::Number>().DoubleValue();
+    double y = info[1].As<Napi::Number>().DoubleValue();
     bool result = SetWorldCenter(x, y);
     if (result)
     {
-        return Boolean::New(env, true);
+        return Napi::Boolean::New(env, true);
     }
     else
     {
@@ -151,14 +150,14 @@ Napi::Value TSetWorldCenter(const CallbackInfo &info)
     }
 }
 
-Napi::Value TSetWorldScale(const CallbackInfo &info)
+Napi::Value TSetWorldScale(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
-    double scale = info[0].As<Number>().DoubleValue();
+    Napi::Env env = info.Env();
+    double scale = info[0].As<Napi::Number>().DoubleValue();
     bool result = SetWorldScale(scale);
     if (result)
     {
-        return Boolean::New(env, true);
+        return Napi::Boolean::New(env, true);
     }
     else
     {
@@ -169,9 +168,9 @@ Napi::Value TSetWorldScale(const CallbackInfo &info)
     }
 }
 
-Napi::Value TGetTransformOfMap(const CallbackInfo &info)
+Napi::Value TGetTransformOfMap(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     double x = -1;
     double y = -1;
     double a = -1;
@@ -179,11 +178,11 @@ Napi::Value TGetTransformOfMap(const CallbackInfo &info)
     bool result = GetTransformOfMap(x, y, a, mapId);
     // if (result)
     // {
-    Object obj = Object::New(env);
-    obj.Set("x", Number::New(env, x));
-    obj.Set("y", Number::New(env, y));
-    obj.Set("a", Number::New(env, a));
-    obj.Set("mapId", Number::New(env, mapId));
+    Napi::Object obj = Napi::Object::New(env);
+    obj.Set("x", Napi::Number::New(env, x));
+    obj.Set("y", Napi::Number::New(env, y));
+    obj.Set("a", Napi::Number::New(env, a));
+    obj.Set("mapId", Napi::Number::New(env, mapId));
     return obj;
     // }
     // else
@@ -195,19 +194,19 @@ Napi::Value TGetTransformOfMap(const CallbackInfo &info)
     // }
 }
 
-Napi::Value TGetPositionOfMap(const CallbackInfo &info)
+Napi::Value TGetPositionOfMap(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     double x = -1;
     double y = -1;
     int mapId = -1;
     bool result = GetPositionOfMap(x, y, mapId);
     if (result)
     {
-        Object obj = Object::New(env);
-        obj.Set("x", Number::New(env, x));
-        obj.Set("y", Number::New(env, y));
-        obj.Set("mapId", Number::New(env, mapId));
+        Napi::Object obj = Napi::Object::New(env);
+        obj.Set("x", Napi::Number::New(env, x));
+        obj.Set("y", Napi::Number::New(env, y));
+        obj.Set("mapId", Napi::Number::New(env, mapId));
         return obj;
     }
     else
@@ -219,14 +218,14 @@ Napi::Value TGetPositionOfMap(const CallbackInfo &info)
     }
 }
 
-Napi::Value TGetDirection(const CallbackInfo &info)
+Napi::Value TGetDirection(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     double a = -1;
     bool result = GetDirection(a);
     if (result)
     {
-        return Number::New(env, a);
+        return Napi::Number::New(env, a);
     }
     else
     {
@@ -237,14 +236,14 @@ Napi::Value TGetDirection(const CallbackInfo &info)
     }
 }
 
-Napi::Value TGetRotation(const CallbackInfo &info)
+Napi::Value TGetRotation(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     double a = -1;
     bool result = GetRotation(a);
     if (result)
     {
-        return Number::New(env, a);
+        return Napi::Number::New(env, a);
     }
     else
     {
@@ -255,19 +254,19 @@ Napi::Value TGetRotation(const CallbackInfo &info)
     }
 }
 
-Napi::Value TGetStar(const CallbackInfo &info)
+Napi::Value TGetStar(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     double x = -1;
     double y = -1;
     bool isEnd = false;
     bool result = GetStar(x, y, isEnd);
     if (result)
     {
-        Object obj = Object::New(env);
-        obj.Set("x", Number::New(env, x));
-        obj.Set("y", Number::New(env, y));
-        obj.Set("isEnd", Boolean::New(env, isEnd));
+        Napi::Object obj = Napi::Object::New(env);
+        obj.Set("x", Napi::Number::New(env, x));
+        obj.Set("y", Napi::Number::New(env, y));
+        obj.Set("isEnd", Napi::Boolean::New(env, isEnd));
         return obj;
     }
     else
@@ -279,14 +278,14 @@ Napi::Value TGetStar(const CallbackInfo &info)
     }
 }
 
-Napi::Value TGetStarJson(const CallbackInfo &info)
+Napi::Value TGetStarJson(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     char star_buff[2048] = {0};
     bool result = GetStarJson(star_buff);
     if (result)
     {
-        return String::New(env, star_buff);
+        return Napi::String::New(env, star_buff);
     }
     else
     {
@@ -297,14 +296,14 @@ Napi::Value TGetStarJson(const CallbackInfo &info)
     }
 }
 
-Napi::Value TGetUID(const CallbackInfo &info)
+Napi::Value TGetUID(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     int uid = -1;
     bool result = GetUID(uid);
     if (result)
     {
-        return Number::New(env, uid);
+        return Napi::Number::New(env, uid);
     }
     else
     {
@@ -315,10 +314,10 @@ Napi::Value TGetUID(const CallbackInfo &info)
     }
 }
 
-Napi::Value TGetInfoLoadPicture(const CallbackInfo &info)
+Napi::Value TGetInfoLoadPicture(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
-    const char *v_path = info[0].As<String>().Utf8Value().c_str();
+    Napi::Env env = info.Env();
+    const char *v_path = info[0].As<Napi::String>().Utf8Value().c_str();
     char *path = const_cast<char *>(v_path);
     int uid = -1;
     int &uid_ref = uid;
@@ -331,12 +330,12 @@ Napi::Value TGetInfoLoadPicture(const CallbackInfo &info)
     bool result = GetInfoLoadPicture(path, uid_ref, x_ref, y_ref, a_ref);
     if (result)
     {
-        Object obj = Object::New(env);
-        obj.Set("path", String::New(env, path));
-        obj.Set("uid", Number::New(env, uid));
-        obj.Set("x", Number::New(env, x));
-        obj.Set("y", Number::New(env, y));
-        obj.Set("a", Number::New(env, a));
+        Napi::Object obj = Napi::Object::New(env);
+        obj.Set("path", Napi::String::New(env, path));
+        obj.Set("uid", Napi::Number::New(env, uid));
+        obj.Set("x", Napi::Number::New(env, x));
+        obj.Set("y", Napi::Number::New(env, y));
+        obj.Set("a", Napi::Number::New(env, a));
         return obj;
     }
     else
@@ -348,19 +347,19 @@ Napi::Value TGetInfoLoadPicture(const CallbackInfo &info)
     }
 }
 
-Napi::Value TGetInfoLoadVideo(const CallbackInfo &info)
+Napi::Value TGetInfoLoadVideo(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
-    const char *v_path = info[0].As<String>().Utf8Value().c_str();
+    Napi::Env env = info.Env();
+    const char *v_path = info[0].As<Napi::String>().Utf8Value().c_str();
     char *path = const_cast<char *>(v_path);
-    const char *v_pathOutFile = info[1].As<String>().Utf8Value().c_str();
+    const char *v_pathOutFile = info[1].As<Napi::String>().Utf8Value().c_str();
     char *pathOutFile = const_cast<char *>(v_pathOutFile);
     bool result = GetInfoLoadVideo(path, pathOutFile);
     if (result)
     {
-        Object obj = Object::New(env);
-        obj.Set("path", String::New(env, path));
-        obj.Set("pathOutFile", String::New(env, pathOutFile));
+        Napi::Object obj = Napi::Object::New(env);
+        obj.Set("path", Napi::String::New(env, path));
+        obj.Set("pathOutFile", Napi::String::New(env, pathOutFile));
         return obj;
     }
     else
@@ -372,13 +371,13 @@ Napi::Value TGetInfoLoadVideo(const CallbackInfo &info)
     }
 }
 
-Napi::Value TDebugCapture(const CallbackInfo &info)
+Napi::Value TDebugCapture(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     bool result = DebugCapture();
     if (result)
     {
-        return Boolean::New(env, result);
+        return Napi::Boolean::New(env, result);
     }
     else
     {
@@ -389,31 +388,31 @@ Napi::Value TDebugCapture(const CallbackInfo &info)
     }
 }
 
-Napi::Value TGetLastErr(const CallbackInfo &info)
+Napi::Value TGetLastErr(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     int err = GetLastErr();
-    return Number::New(env, err);
+    return Napi::Number::New(env, err);
 }
 
-Napi::Value TGetLastErrMsg(const CallbackInfo &info)
+Napi::Value TGetLastErrMsg(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     int buff_size = 2048;
     char msg_buff[2048] = {0};
     GetLastErrMsg(msg_buff, buff_size);
-    return String::New(env, msg_buff);
+    return Napi::String::New(env, msg_buff);
 }
 
-Napi::Value TGetCompileVersion(const CallbackInfo &info)
+Napi::Value TGetCompileVersion(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     int buff_size = 2048;
     char msg_buff[2048] = {0};
     bool result = GetCompileVersion(msg_buff, buff_size);
     if (result)
     {
-        return String::New(env, msg_buff);
+        return Napi::String::New(env, msg_buff);
     }
     else
     {
@@ -424,15 +423,15 @@ Napi::Value TGetCompileVersion(const CallbackInfo &info)
     }
 }
 
-Napi::Value TGetCompileTime(const CallbackInfo &info)
+Napi::Value TGetCompileTime(const Napi::CallbackInfo &info)
 {
-    Env env = info.Env();
+    Napi::Env env = info.Env();
     int buff_size = 1024;
     char msg_buff[1024] = {0};
     bool result = GetCompileTime(msg_buff, buff_size);
     if (result)
     {
-        return String::New(env, msg_buff);
+        return Napi::String::New(env, msg_buff);
     }
     else
     {
@@ -443,33 +442,35 @@ Napi::Value TGetCompileTime(const CallbackInfo &info)
     }
 }
 
-Object ModuleInit(Env env, Object exports)
+// Napi::Object ModuleInit(Env env, Napi::Object exports)
+Napi::Object ModuleUnsafeInit(Napi::Env env)
 {
-    exports.Set(String::New(env, "version"), Function::New(env, TVersion));
-    exports.Set(String::New(env, "init"), Function::New(env, TInit));
-    exports.Set(String::New(env, "uninit"), Function::New(env, TUninit));
-    exports.Set(String::New(env, "startServe"), Function::New(env, TStartServe));
-    exports.Set(String::New(env, "stopServe"), Function::New(env, TStopServe));
-    exports.Set(String::New(env, "setUseBitbltCaptureMode"), Function::New(env, TSetUseBitbltCaptureMode));
-    exports.Set(String::New(env, "setUseDx11CaptureMode"), Function::New(env, TSetUseDx11CaptureMode));
-    exports.Set(String::New(env, "setHandle"), Function::New(env, TSetHandle));
-    exports.Set(String::New(env, "setWorldCenter"), Function::New(env, TSetWorldCenter));
-    exports.Set(String::New(env, "setWorldScale"), Function::New(env, TSetWorldScale));
-    exports.Set(String::New(env, "getTransformOfMap"), Function::New(env, TGetTransformOfMap));
-    exports.Set(String::New(env, "getPositionOfMap"), Function::New(env, TGetPositionOfMap));
-    exports.Set(String::New(env, "getDirection"), Function::New(env, TGetDirection));
-    exports.Set(String::New(env, "getRotation"), Function::New(env, TGetRotation));
-    exports.Set(String::New(env, "getStar"), Function::New(env, TGetStar));
-    exports.Set(String::New(env, "getStarJson"), Function::New(env, TGetStarJson));
-    exports.Set(String::New(env, "getUID"), Function::New(env, TGetUID));
-    exports.Set(String::New(env, "getInfoLoadPicture"), Function::New(env, TGetInfoLoadPicture));
-    exports.Set(String::New(env, "getInfoLoadVideo"), Function::New(env, TGetInfoLoadVideo));
-    exports.Set(String::New(env, "debugCapture"), Function::New(env, TDebugCapture));
-    exports.Set(String::New(env, "getLastErr"), Function::New(env, TGetLastErr));
-    exports.Set(String::New(env, "getLastErrMsg"), Function::New(env, TGetLastErrMsg));
-    exports.Set(String::New(env, "getCompileVersion"), Function::New(env, TGetCompileVersion));
-    exports.Set(String::New(env, "getCompileTime"), Function::New(env, TGetCompileTime));
+    Napi::Object exports;
+    exports.Set(Napi::String::New(env, "version"), Napi::Function::New(env, TVersion));
+    exports.Set(Napi::String::New(env, "init"), Napi::Function::New(env, TInit));
+    exports.Set(Napi::String::New(env, "uninit"), Napi::Function::New(env, TUninit));
+    exports.Set(Napi::String::New(env, "startServe"), Napi::Function::New(env, TStartServe));
+    exports.Set(Napi::String::New(env, "stopServe"), Napi::Function::New(env, TStopServe));
+    exports.Set(Napi::String::New(env, "setUseBitbltCaptureMode"), Napi::Function::New(env, TSetUseBitbltCaptureMode));
+    exports.Set(Napi::String::New(env, "setUseDx11CaptureMode"), Napi::Function::New(env, TSetUseDx11CaptureMode));
+    exports.Set(Napi::String::New(env, "setHandle"), Napi::Function::New(env, TSetHandle));
+    exports.Set(Napi::String::New(env, "setWorldCenter"), Napi::Function::New(env, TSetWorldCenter));
+    exports.Set(Napi::String::New(env, "setWorldScale"), Napi::Function::New(env, TSetWorldScale));
+    exports.Set(Napi::String::New(env, "getTransformOfMap"), Napi::Function::New(env, TGetTransformOfMap));
+    exports.Set(Napi::String::New(env, "getPositionOfMap"), Napi::Function::New(env, TGetPositionOfMap));
+    exports.Set(Napi::String::New(env, "getDirection"), Napi::Function::New(env, TGetDirection));
+    exports.Set(Napi::String::New(env, "getRotation"), Napi::Function::New(env, TGetRotation));
+    exports.Set(Napi::String::New(env, "getStar"), Napi::Function::New(env, TGetStar));
+    exports.Set(Napi::String::New(env, "getStarJson"), Napi::Function::New(env, TGetStarJson));
+    exports.Set(Napi::String::New(env, "getUID"), Napi::Function::New(env, TGetUID));
+    exports.Set(Napi::String::New(env, "getInfoLoadPicture"), Napi::Function::New(env, TGetInfoLoadPicture));
+    exports.Set(Napi::String::New(env, "getInfoLoadVideo"), Napi::Function::New(env, TGetInfoLoadVideo));
+    exports.Set(Napi::String::New(env, "debugCapture"), Napi::Function::New(env, TDebugCapture));
+    exports.Set(Napi::String::New(env, "getLastErr"), Napi::Function::New(env, TGetLastErr));
+    exports.Set(Napi::String::New(env, "getLastErrMsg"), Napi::Function::New(env, TGetLastErrMsg));
+    exports.Set(Napi::String::New(env, "getCompileVersion"), Napi::Function::New(env, TGetCompileVersion));
+    exports.Set(Napi::String::New(env, "getCompileTime"), Napi::Function::New(env, TGetCompileTime));
     return exports;
 }
 
-NODE_API_MODULE(addon, ModuleInit)
+// NODE_API_MODULE(addon, ModuleInit)

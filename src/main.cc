@@ -1,4 +1,5 @@
 #include "main.h"
+#include "unsafe.h"
 
 Napi::Object CreateResult(Napi::Env env, bool success, Napi::Value value)
 {
@@ -310,6 +311,7 @@ Napi::Object ModuleInit(Napi::Env env, Napi::Object exports)
     exports.Set("getLastErrJson", Napi::Function::New(env, ATGetLastErrJson));
     exports.Set("getCompileVersion", Napi::Function::New(env, ATGetCompileVersion));
     exports.Set("getCompileTime", Napi::Function::New(env, ATGetCompileTime));
+    exports.Set("unsafe", ModuleUnsafeInit(env));
     return exports;
 }
 

@@ -2,7 +2,7 @@
     'targets': [
         {
             'target_name': 'genshin-impact-auto-track',
-            'sources': ['src/main.cc'],
+            'sources': ['src/main.cc', 'src/unsafe.cc'],
             'include_dirs': [
                 "<!@(node -p \"require('node-addon-api').include\")",
                 "../cvAutoTrack"
