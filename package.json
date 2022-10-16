@@ -39,6 +39,7 @@
     ]
   },
   "scripts": {
+    "download:clean": "pwsh download-dll.ps1 -clean",
     "prebuild": "pwsh download-dll.ps1 && npm run configure",
     "install": "node-pre-gyp install --fallback-to-build",
     "test": "node ./test",
@@ -70,5 +71,5 @@
     "node-gyp": "8.x"
   },
   "gypfile": true,
-  "cvAutoTrackVersion": "7.1.4"
+  "cvAutoTrackVersion": "7.1.6"
 }
